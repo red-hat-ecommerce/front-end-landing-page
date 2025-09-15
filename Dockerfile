@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/nginx-120:latest
+FROM registry.access.redhat.com/ubi9/nginx-120:9.6
 
 # Copy all frontend files to the appropriate directory
 COPY ./css /opt/app-root/src/css
@@ -9,4 +9,8 @@ COPY ./index.html /opt/app-root/src/index.html
 # Expose the port the nginx server runs on
 EXPOSE 8080
 
-# The UBI nginx image has a default CMD that starts nginx, so we don't need to specify it
+# Redirect logs so Docker captures them
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
+
+CMD ["nginx", "-g", "daemon off;"]
