@@ -76,58 +76,7 @@
                 </div>
             </div>
 
-            <div class="row">
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="/product/index.html?id=4"><img class="card-img-top" src="/img/image-4.jpg" alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                Product Name
-                            </h4>
-                            <h5>IDR 15.000,00</h5>
-                            <p class="card-text">Product Description</p>
-                            <a class="btn btn-primary" href="/product/index.html?id=4" role="button">Detail</a>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Stock Available : 1</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="/product/index.html?id=5"><img class="card-img-top" src="/img/image-5.jpg" alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                Product Name
-                            </h4>
-                            <h5>IDR 175.000,00</h5>
-                            <p class="card-text">Product Description</p>
-                            <a class="btn btn-primary" href="/product/index.html?id=5" role="button">Detail</a>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Stock Available : 5</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <a href="/product/index.html?id=6"><img class="card-img-top" src="/img/image-6.jpg" alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                Product Name
-                            </h4>
-                            <h5>IDR 21.500,00</h5>
-                            <p class="card-text">Product Description</p>
-                            <a class="btn btn-primary" href="/product/index.html?id=6" role="button">Detail</a>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Stock Available : 88</small>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <div class="row" id="list-products"></div>
             <!-- /.row -->
 
         </div>
@@ -150,6 +99,37 @@
 <!-- Bootstrap core JavaScript -->
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.bundle.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $.get("/api/product/", function (data) {
+            data.forEach(function (product) {
+                $('#list-products').append(`
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <a href="/product/index.html?id=${product.productId}"><img class="card-img-top" src="/img/image-${product.productId}.jpg" alt="${product.productName}"></a>
+                        <div class="card-body">
+                        <h4 class="card-title">
+                            ${product.productName}
+                        </h4>
+                        <h5>IDR ${product.productPrice}</h5>
+                        <p class="card-text">
+                            ${product.productShortDescription}
+                        </p>
+                        <a class="btn btn-primary" href="/product/index.html?id=${product.productId}" role="button">Detail</a>
+                        </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Stock Available : 1</small>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            });
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.error("error fetching products:", textStatus, errorThrown);
+        });
+    });
+</script>
 
 </body>
 
